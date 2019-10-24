@@ -18,7 +18,7 @@ from peaknet_utils import *
 from cfg import parse_cfg
 from region_loss import RegionLoss
 from darknet import Darknet
-from models.tiny_yolo import TinyYoloNet
+#from models.tiny_yolo import TinyYoloNet
 
 
 def validate_batch( model, imgs, labels, json_file=None, mini_batch_size=32, box_size=7, use_cuda=True, writer=None, verbose=False ):
