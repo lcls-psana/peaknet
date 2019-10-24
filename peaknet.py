@@ -35,7 +35,7 @@ class Peaknet():
     def loadDNWeights( self, weight_path ):
         self.model.load_weights(weight_path )
         
-    def snapshot( self, imgs, labels, tag="snapshot", path ):
+    def snapshot( self, imgs, labels, path, tag="snapshot" ):
         seen = self.model.seen
         np.save(os.path.join(path, "{}_imgs_{}".format(tag,
                 str(seen).zfill(9))), imgs)

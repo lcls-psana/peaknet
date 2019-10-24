@@ -5,9 +5,9 @@ import math
 import torch
 import numpy as np
 from torch.autograd import Variable
-import itertools
-import struct # get_image_size
-import imghdr # get_image_size
+#import itertools
+#import struct # get_image_size
+#import imghdr # get_image_size
 
 def sigmoid(x):
     return 1.0/(math.exp(-x)+1.)

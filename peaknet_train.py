@@ -20,7 +20,7 @@ from cfg import parse_cfg
 from region_loss import RegionLoss
 from darknet_utils import get_region_boxes, nms
 from darknet import Darknet
-from models.tiny_yolo import TinyYoloNet
+#from models.tiny_yolo import TinyYoloNet
 
 def init_model( model ):
     ind = -2

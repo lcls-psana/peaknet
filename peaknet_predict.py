@@ -18,7 +18,7 @@ from darknet_utils import *
 from cfg import parse_cfg
 from region_loss import RegionLoss
 from darknet import Darknet
-from models.tiny_yolo import TinyYoloNet
+#from models.tiny_yolo import TinyYoloNet
 
 
 def predict_batch( model, imgs, conf_thresh=0.15, nms_thresh=0.45, batch_size=32, box_size=7, use_cuda=True, writer=None, verbose=False ):
