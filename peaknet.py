@@ -20,8 +20,7 @@ class Peaknet():
         self.writer = None
 
     def loadDefaultCFG(self):
-        self.model = Darknet("cfg/newpeaksv10-asic.cfg")
-        self.model.load_weights("/reg/neh/home5/liponan/ai/peaknet4antfarm/results/weights/cxitut13_0010_ep100.weights")
+        self.model = torch.load("antfarm_multi_trainer_model_021626880")
 
     def set_writer(self, project_name=None, parameters={}):
         if project_name == None:
