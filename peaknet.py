@@ -20,7 +20,7 @@ class Peaknet():
         self.writer = None
 
     def loadDefaultCFG(self):
-        self.model = torch.load("antfarm_multi_trainer_model_021626880")
+        self.model = torch.load("/reg/d/psdm/cxi/cxic0415/scratch/liponan/antfarm_backup/antfarm_multi_trainer_model_021626880")
 
     def set_writer(self, project_name=None, parameters={}):
         if project_name == None:
