@@ -21,7 +21,7 @@ class Peaknet():
 
     def loadDefaultCFG(self):
         self.model = Darknet("cfg/newpeaksv10-asic.cfg")
-        self.load_weights("/reg/neh/home5/liponan/ai/peaknet4antfarm/results/weights/cxitut13_0010_ep100.weights")
+        self.model.load_weights("/reg/neh/home5/liponan/ai/peaknet4antfarm/results/weights/cxitut13_0010_ep100.weights")
 
     def set_writer(self, project_name=None, parameters={}):
         if project_name == None:
