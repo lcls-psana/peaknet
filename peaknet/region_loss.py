@@ -4,7 +4,7 @@ import math
 import torch.nn as nn
 import torch.nn.functional as F
 from torch.autograd import Variable
-from darknet_utils import *
+from peaknet.darknet_utils import *
 
 
 maxPeaks = 1024

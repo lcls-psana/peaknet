@@ -8,8 +8,8 @@ import numpy as np
 import pandas as pd
 from torch.utils.data import Dataset
 from torch.autograd import Variable
-from darknet_utils import read_truths_args, read_truths
-from peaknet_utils import json_parser, psana_img_loader, psanaRun
+from peaknet.darknet_utils import read_truths_args, read_truths
+from peaknet.peaknet_utils import json_parser, psana_img_loader, psanaRun
 
 
 class psanaDataset(Dataset):

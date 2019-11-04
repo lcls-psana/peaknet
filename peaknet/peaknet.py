@@ -5,10 +5,10 @@ import torch as t
 import sys
 import numpy as np
 import torch
-from darknet import Darknet
-import peaknet_train
-from peaknet_validate import validate_batch
-from peaknet_predict import predict_batch
+from peaknet.darknet import Darknet
+from peaknet import peaknet_train
+from peaknet.peaknet_validate import validate_batch
+from peaknet.peaknet_predict import predict_batch
 from tensorboardX import SummaryWriter
 
 

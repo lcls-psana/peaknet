@@ -11,15 +11,15 @@ import torch.backends.cudnn as cudnn
 from torchvision import datasets, transforms
 from torch.autograd import Variable
 
-import peaknet_dataset
+from peaknet import peaknet_dataset
 import random
 import math
 import os
-from utils import *
-from cfg import parse_cfg
-from region_loss import RegionLoss
-from darknet_utils import get_region_boxes, nms
-from darknet import Darknet
+from peaknet.utils import *
+from peaknet.cfg import parse_cfg
+from peaknet.region_loss import RegionLoss
+from peaknet.darknet_utils import get_region_boxes, nms
+from peaknet.darknet import Darknet
 #from models.tiny_yolo import TinyYoloNet
 
 
