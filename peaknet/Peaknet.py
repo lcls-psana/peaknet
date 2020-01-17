@@ -9,18 +9,28 @@ from peaknet.darknet import Darknet
 from peaknet import peaknet_train
 from peaknet.peaknet_validate import validate_batch
 from peaknet.peaknet_predict import predict_batch
-from tensorboardX import SummaryWriter
+#from tensorboardX import SummaryWriter
 
 
 class Peaknet():
 
-    def __init__(self):
+    def __init__(self, use_cuda=True):
         self.model = None
         self.optimizer = None
         self.writer = None
+        self.use_cuda=use_cuda
+
+    def load(self, pt_path):
+        self.model = torch.load(pt_path)
+        if self.use_cuda:
+            self.model.cuda()
+
 
     def loadDefaultCFG(self):
-        self.model = torch.load("/reg/d/psdm/cxi/cxic0415/scratch/liponan/antfarm_backup/antfarm_multi_trainer_model_021626880")
+        #self.model = torch.load("/reg/d/psdm/cxi/cxic0415/scratch/liponan/antfarm_backup/antfarm_multi_trainer_model_021626880")
+        self.model = torch.load("/reg/neh/home/liponan/ai/peaknet4antfarm_v2/model_init.pt")
+        if self.use_cuda:
+            self.model.cuda()
 
     def set_writer(self, project_name=None, parameters={}):
         if project_name == None:
@@ -69,10 +79,10 @@ class Peaknet():
         return grad
 
     def predict( self, imgs, box_size = 7, batch_size=1, conf_thresh=0.15,
-            nms_thresh=0.45, use_cuda=True ):
+            nms_thresh=0.45 ):
         results = predict_batch( self.model, imgs, batch_size=batch_size,
                 conf_thresh=conf_thresh, nms_thresh=nms_thresh,
-                box_size=box_size, use_cuda=use_cuda)
+                box_size=box_size, use_cuda=self.use_cuda)
         return results
 
     def validate( self, imgs, labels, box_size = 7, mini_batch_size=32,
