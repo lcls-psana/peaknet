@@ -19,7 +19,7 @@ pip install tensorboardX
 
 ```
 from peaknet import Peaknet
-peaknet = Peaknet() # Init a Peaknet instance
+peaknet = Peaknet(use_cuda=True) # Init a Peaknet instance
 peaknet.loadDefaultCFG() # Load newpeaksv10 network and pretrained weights 
 ```
 
