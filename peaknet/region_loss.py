@@ -42,7 +42,7 @@ def build_targets(pred_boxes, target, anchors, num_anchors, num_classes, nH, nW,
             gh = target[b][t*5+4]*nH
             cur_gt_boxes = torch.FloatTensor([gx,gy,gw,gh]).repeat(nAnchors,1).t()
             cur_ious = torch.max(cur_ious, bbox_ious(cur_pred_boxes, cur_gt_boxes, x1y1x2y2=False))
-        conf_mask[b][cur_ious>sil_thresh] = 0
+        conf_mask[b][cur_ious.view(conf_mask[b].size())>sil_thresh] = 0
 
     # 2019-03-18 #
     if seen < 12800 and False:
@@ -163,17 +163,25 @@ class RegionLoss(nn.Module):
         anchor_h = torch.Tensor(self.anchors).view(nA, self.anchor_step).index_select(1, torch.LongTensor([1])).cuda()
         anchor_w = anchor_w.repeat(nB, 1).repeat(1, 1, nH*nW).view(nB*nA*nH*nW)
         anchor_h = anchor_h.repeat(nB, 1).repeat(1, 1, nH*nW).view(nB*nA*nH*nW)
-        pred_boxes[0] = x.data + grid_x
-        pred_boxes[1] = y.data + grid_y
-        pred_boxes[2] = torch.exp(w.data) * anchor_w
-        pred_boxes[3] = torch.exp(h.data) * anchor_h
+        #print("x.data", x.data.size())
+        #print("grid_x", grid_x.contiguous().view(x.data.size()).size())
+        #pred_boxes[0] = x.data + grid_x.contiguous().view(x.data.size())
+        #pred_boxes[1] = y.data + grid_y.contiguous().view(y.data.size())
+        #pred_boxes[2] = torch.exp(w.data) * anchor_w
+        #pred_boxes[3] = torch.exp(h.data) * anchor_h
+	pred_boxes[0] = torch.reshape(x.data, (1,nB*nA*nH*nW)) + grid_x
+        pred_boxes[1] = torch.reshape(y.data, (1,nB*nA*nH*nW)) + grid_y
+        pred_boxes[2] = torch.reshape(torch.exp(w.data), (1,nB*nA*nH*nW)) * anchor_w
+        pred_boxes[3] = torch.reshape(torch.exp(h.data), (1,nB*nA*nH*nW)) * anchor_h
         pred_boxes = convert2cpu(pred_boxes.transpose(0,1).contiguous().view(-1,4))
         t2 = time.time()
 
         nGT, nCorrect, coord_mask, conf_mask, cls_mask, tx, ty, tw, th, tconf,tcls = build_targets(pred_boxes, target.data, self.anchors, nA, nC, \
                                                                nH, nW, self.noobject_scale, self.object_scale, self.thresh, self.seen)
         cls_mask = (cls_mask == 1)
-        nProposals = int((conf > 0.10).sum().data[0])
+        #nProposals = int((conf > 0.10).sum().data[0])
+        #nProposals = int((conf > 0.10).sum().data[0])
+        nProposals = int((conf > 0.10).sum().data.item())
 
 	pw = w.exp() * Variable( anchor_w.view( w.size() ).cuda() )
         ph = h.exp() * Variable( anchor_h.view( h.size() ).cuda() )
@@ -184,7 +192,8 @@ class RegionLoss(nn.Module):
         tw    = Variable(tw.cuda())
         th    = Variable(th.cuda())
         tconf = Variable(tconf.cuda())
-        tcls  = Variable(tcls.view(-1)[cls_mask].long().cuda())
+        #tcls  = Variable(tcls.view(-1)[cls_mask].long().cuda())
+        tcls  = Variable(tcls.view(-1)[cls_mask.view(-1)].long().cuda())
 
         coord_mask = Variable(coord_mask.cuda())
         conf_mask  = Variable(conf_mask.cuda().sqrt())
@@ -222,7 +231,8 @@ class RegionLoss(nn.Module):
             print('     build targets : %f' % (t3 - t2))
             print('       create loss : %f' % (t4 - t3))
             print('             total : %f' % (t4 - t0))
-        print('%d: nGT %d, recall %d, proposals %d, loss: x %f, y %f, w %f, h %f, conf %f, cls %f, total %f' % (self.seen, nGT, nCorrect, nProposals, loss_x.data[0], loss_y.data[0], loss_w.data[0], loss_h.data[0], loss_conf.data[0], loss_cls.data[0], loss.data[0]))
+        print('%d: nGT %d, recall %d, proposals %d, loss: x %f, y %f, w %f, h %f, conf %f, cls %f, total %f' % (self.seen, nGT, nCorrect, nProposals, loss_x.item(), loss_y.item(), loss_w.item(), loss_h.item(), loss_conf.item(), loss_cls.item(), loss.item()))
+        #print('%d: nGT %d, recall %d, proposals %d, loss: x %f, y %f, w %f, h %f, conf %f, cls %f, total %f' % (self.seen, nGT, nCorrect, nProposals, loss_x.data[0], loss_y.data[0], loss_w.data[0], loss_h.data[0], loss_conf.data[0], loss_cls.data[0], loss.data[0]))
         #print('%d: nGT %d, recall %d, proposals %d, loss: x %f, y %f, w %f, h %f, conf %f, cls %f, total %f' % (self.seen, nGT, nCorrect, nProposals, loss_x.data[0], loss_y.data[0], loss_w.data[0], loss_h.data[0], loss_conf.data[0], 0, loss.data[0]))
         if nGT == 0:
             recall = 0
