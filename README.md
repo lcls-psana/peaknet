@@ -4,22 +4,19 @@ A peaknet API with pytorch backbone
 ## conda environment recipe 
 
 ```
-conda activate ana-1.4.16
-conda install pytorch cudatoolkit=10.1 -c pytorch
-conda install tensorboardX
+conda activate ana-1.4.22
 ```
 
-or 
-
-```
-pip install tensorboardX
-```
+To build/test the python, `cd` to the directory containing `setup.py` and execute the following commands:
+- ``mkdir -p install/lib/python2.7/site-packages``
+- ``export PYTHONPATH=`pwd`/install/lib/python2.7/site-packages``
+- ``python setup.py develop --prefix=`pwd`/install``
 
 ## Example
 
 ```
-from peaknet import Peaknet
-peaknet = Peaknet() # Init a Peaknet instance
+from peaknet.Peaknet import Peaknet
+peaknet = Peaknet(use_cuda=True) # Init a Peaknet instance
 peaknet.loadDefaultCFG() # Load newpeaksv10 network and pretrained weights 
 ```
 
