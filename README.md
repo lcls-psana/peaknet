@@ -20,6 +20,8 @@ peaknet = Peaknet(use_cuda=True) # Init a Peaknet instance
 peaknet.loadDefaultCFG() # Load newpeaksv10 network and pretrained weights 
 ```
 
+Default model file lives at `/reg/common/package/peaknet/model.pt`
+
 ## API
 
 ### predict
