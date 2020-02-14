@@ -30,8 +30,8 @@ def predict_batch( model, imgs, conf_thresh=0.15, nms_thresh=0.45, batch_size=32
                         box_size=box_size,
                         ),
         batch_size=batch_size, shuffle=False)
-    #model.train()
-    model.eval()
+    model.train() ### this is a HOTFIX
+    #model.eva1()
 
     batch_nms_boxes = []
     
@@ -40,7 +40,7 @@ def predict_batch( model, imgs, conf_thresh=0.15, nms_thresh=0.45, batch_size=32
             print(batch_idx, data.size())
         if use_cuda:
             data = data.cuda()
-        data = Variable(data)
+        #data = Variable(data)0.
         output, _= model( data.float() )
         output = output.data
         #print(output.size())
