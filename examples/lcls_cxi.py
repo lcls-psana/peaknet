@@ -57,4 +57,6 @@ for nevt,t in enumerate(times[174:178]):
    print("det.calib: ",t6-t5)
    print("psana peaks: ",t7-t6)
    print("peaknet predict: ",t8-t7)
+   #print("peaks:",peaks)
+   #print("images:",images)
 
