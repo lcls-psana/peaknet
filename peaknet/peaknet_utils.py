@@ -411,3 +411,60 @@ def load_from_cxi( filename, idx, box_size=7 ):
     labels = (cls, s, r, c, hh, ww)
 
     return imgs, labels
+
+def conv_peaks_to_array(results):
+    """Convert peaknet peak lists to a numpy array. 
+
+    Args:
+        results -- output from peaknet.
+
+    Returns:
+        peakArr -- peak array.
+
+    """
+    peakNetAttrs = 7 # x,y,w,h,confidence score,category score,category id
+    # Get number of peaks
+    numPeaks = 0
+    for i in range(len(results)):
+         numPeaks += len(results[i][0])
+    # Fill array
+    peakArr = np.zeros((numPeaks,peakNetAttrs))
+    peakInd = 0
+    for res in results:
+        for segment in res:
+            for peak in segment:
+                peakArr[peakInd,:] = peak
+                peakInd += 1          
+    return peakArr
+
+def conv_peaks_to_psana(results, numRows, numCols):
+    """Convert peaknet peaks to psana peak format. 
+    Only the peak positions (seg,row,col) are converted. Rest are set to zero.
+
+    Args:
+        results -- output from peaknet.
+        numRows -- number of rows in the image panel.
+        numCols -- number of columns in the image panel.
+
+    Returns:
+        pspeak -- psana-style peak array.
+
+    """
+    psanaAttrs = 17
+    # Get number of peaks
+    numPeaks = 0
+    for i in range(len(results)):
+         numPeaks += len(results[i][0])
+    # Fill array
+    pspeak = np.zeros((numPeaks,psanaAttrs))
+    seg = 0
+    peakInd = 0
+    for res in results:
+        for segment in res:
+            for peak in segment:
+                col = float(peak[0].data * numCols)
+                row = float(peak[1].data * numRows)
+                pspeak[peakInd,0:3] = [seg,row,col]
+                peakInd += 1          
+            seg += 1
+    return pspeak
